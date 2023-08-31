@@ -9,6 +9,7 @@ import {
   onValue,
 } from "firebase/database";
 import { auth, db } from "./components/Root";
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 function App() {
   const [puzzleData, setPuzzleData] = useState({
@@ -20,7 +21,9 @@ function App() {
     questionImage: ''
   });
   const [puzzles, setPuzzles] = useState<Array<any>>([]); // Specify the type explicitly
+  const [user, loading, error] = useAuthState(auth);
 
+  if(user){
   useEffect(() => {
     const puzzlesRef = ref(db, 'puzzles');
     const puzzlesListener = onValue(puzzlesRef, (snapshot) => {
@@ -70,14 +73,11 @@ function App() {
       console.error('Error deleting puzzle:', error);
     }
   };
+  
 
   return (
     <div>
       <h1>SoScape Manager</h1>
-      <form onSubmit={handleSubmit}>
-        {/* Input fields for puzzle data */}
-        {/* Submit button */}
-      </form>
       <div className="puzzles-list">
         {puzzles.map((puzzle) => (
           <div key={puzzle.puzzleKey} className="puzzle-card">
@@ -91,7 +91,7 @@ function App() {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Puzzle URL:</label>
+          <label>Puzzle URL:
           <input 
           type='text' 
           className="form-control" 
@@ -99,9 +99,10 @@ function App() {
           value={puzzleData.puzzleUrl}
           onChange={(e) => setPuzzleData({ ...puzzleData, puzzleUrl: e.target.value })}
           />
+          </label>
         </div>
         <div className="form-group">
-          <label>Initial Image URL:</label>
+          <label>Initial Image URL:
           <input 
           type='text' 
           className="form-control" 
@@ -109,9 +110,11 @@ function App() {
           value={puzzleData.initialImg}
           onChange={(e) => setPuzzleData({ ...puzzleData, initialImg: e.target.value })}
           />
+          </label>
+
         </div>
         <div className="form-group">
-          <label>Completed Image URL:</label>
+          <label>Completed Image URL:
           <input 
           type='text' 
           className="form-control" 
@@ -119,9 +122,10 @@ function App() {
           value={puzzleData.completedImg}
           onChange={(e) => setPuzzleData({ ...puzzleData, completedImg: e.target.value })}
           />
+          </label>
         </div>
         <div className="form-group">
-          <label>Question:</label>
+          <label>Question:
           <input 
           type='text' 
           className="form-control" 
@@ -129,9 +133,10 @@ function App() {
           value={puzzleData.question}
           onChange={(e) => setPuzzleData({ ...puzzleData, question: e.target.value })}
           />
+          </label>
         </div>
         <div className="form-group">
-          <label>Answer:</label>
+          <label>Answer:
           <input 
           type='text' 
           className="form-control" 
@@ -139,9 +144,10 @@ function App() {
           value={puzzleData.answer}
           onChange={(e) => setPuzzleData({ ...puzzleData, answer: e.target.value })}
           />
+          </label>
         </div>
         <div className="form-group">
-          <label>Question Image URL:</label>
+          <label>Question Image URL:
           <input 
           type='text' 
           className="form-control" 
@@ -149,12 +155,14 @@ function App() {
           value={puzzleData.questionImage}
           onChange={(e) => setPuzzleData({ ...puzzleData, questionImage: e.target.value })}
           />
+          </label>
         </div>
         <button type="submit">Add Puzzle</button>
       </form>
     </div>
 
   );
+}
 }
 
 export default App;
