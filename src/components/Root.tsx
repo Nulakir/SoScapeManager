@@ -6,6 +6,7 @@ import { getDatabase, ref, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import App from "../App";
+import { getStorage } from "firebase/storage";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -22,6 +23,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getDatabase(app);
+export const storage = getStorage(app);
 
 export default function Root(props) {
   const location = useLocation();
