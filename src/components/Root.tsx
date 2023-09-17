@@ -9,7 +9,7 @@ import App from "../App";
 import { getStorage } from "firebase/storage";
 
 // Initialize Firebase
-const firebaseConfig = {
+const firebaseConfigMain = {
   apiKey: "AIzaSyDJTq_zXGe7mp5og_SIUZx1u1NQny30fjU",
   authDomain: "soscape-93544.firebaseapp.com",
   databaseURL:
@@ -20,10 +20,20 @@ const firebaseConfig = {
   appId: "1:378686563437:web:36a8370c1ef012953b0b64",
 };
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getDatabase(app);
-export const storage = getStorage(app);
+const firebaseConfigManager = {
+  apiKey: "AIzaSyB7u8mLeE2MTllenMuDAVY7KY3TAAYqavA",
+  authDomain: "soscapemanager.firebaseapp.com",
+  projectId: "soscapemanager",
+  storageBucket: "soscapemanager.appspot.com",
+  messagingSenderId: "205911616592",
+  appId: "1:205911616592:web:d19692eb3e4fbd6c577555"
+};
+
+const appManager = initializeApp(firebaseConfigManager);
+const appMain = initializeApp(firebaseConfigMain);
+export const auth = getAuth(appMain);
+export const db = getDatabase(appMain);
+export const storage = getStorage(appMain);
 
 export default function Root(props) {
   const location = useLocation();
