@@ -38,24 +38,24 @@ function App() {
     if (user) {
       const puzzlesRef = ref_database(db, 'puzzles');
       const puzzlesListener = onValue(puzzlesRef, (snapshot) => {
-          const retrievedData = snapshot.val();
+        const retrievedData = snapshot.val();
 
-          if (retrievedData) {
-              const puzzleList = Object.keys(retrievedData).map((key) => ({
-                  puzzleKey: key,
-                  ...retrievedData[key],
-              }));
-              setPuzzles(puzzleList);
-          } else {
-              setPuzzles([]);
-          }
+        if (retrievedData) {
+          const puzzleList = Object.keys(retrievedData).map((key) => ({
+            puzzleKey: key,
+            ...retrievedData[key],
+          }));
+          setPuzzles(puzzleList);
+        } else {
+          setPuzzles([]);
+        }
       });
 
       return () => {
-          puzzlesListener();
+        puzzlesListener();
       };
-  }
-}, [user]);
+    }
+  }, [user]);
 
   useEffect(() => {
     // Fetch the list of images from Firebase Storage
@@ -82,6 +82,11 @@ function App() {
 
   const handleSubmit = async (user) => {
     try {
+      // Ensure that both the initial and completed images have been selected before submitting
+      if (!puzzleData.initialImg || !puzzleData.completedImg) {
+        toast.error('Please select both the initial and completed room images before submitting.');
+        return;
+      }
       // Ensure that an image has been selected before submitting
       if (!selectedFile) {
         toast.error('Please select an image before submitting.');
@@ -118,6 +123,8 @@ function App() {
         answer: '',
         questionImage: '',
       });
+      // Reset the selected file
+      setSelectedFile(null);
       // Reset the input field by toggling the resetUploadInput state
       setResetUploadInput((prevState) => !prevState);
     } catch (error) {
@@ -136,7 +143,7 @@ function App() {
 
   return (
     <div className="container mt-5">
-      <ToastContainer/>
+      <ToastContainer />
       <h1 className="mb-5 text-center">SoScape Manager</h1>
       <div className="row">
         {puzzles.map((puzzle) => (
@@ -146,7 +153,7 @@ function App() {
                 height="150"
                 alt="Puzzle" />
               <div className="card-body">
-              <p className="card-text">Hint: {puzzle.hint}</p>
+                <p className="card-text">Hint: {puzzle.hint}</p>
                 <p className="card-text">Question: {puzzle.question}</p>
                 <p className="card-text">Answer: {puzzle.answer}</p>
                 <button className="btn btn-danger" onClick={() => handleDelete(puzzle.puzzleKey)}>
