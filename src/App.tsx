@@ -27,7 +27,7 @@ function App() {
     questionImage: '', // Store the URL of the uploaded image
   });
   const [puzzles, setPuzzles] = useState<Array<any>>([]); // Specify the type explicitly
-  const [user, loading, error] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   const [currentPuzzleKey, setCurrentPuzzleKey] = useState<string | null>(null); // To store the current puzzle key
   const [imageOptions, setImageOptions] = useState<Array<string>>([]);
   const [completeImageOptions, setCompletedImageOptions] = useState<Array<string>>([]);
@@ -38,22 +38,24 @@ function App() {
     if (user) {
       const puzzlesRef = ref_database(db, 'puzzles');
       const puzzlesListener = onValue(puzzlesRef, (snapshot) => {
-        const puzzleData = snapshot.val();
-        console.log('snapshot', Object.keys(puzzleData)[0]);
-        if (puzzleData) {
-          const puzzleList = Object.keys(puzzleData).map((key) => ({
-            puzzleKey: key,
-            ...puzzleData[key],
-          }));
-          setPuzzles(puzzleList);
-        }
+          const retrievedData = snapshot.val();
+
+          if (retrievedData) {
+              const puzzleList = Object.keys(retrievedData).map((key) => ({
+                  puzzleKey: key,
+                  ...retrievedData[key],
+              }));
+              setPuzzles(puzzleList);
+          } else {
+              setPuzzles([]);
+          }
       });
 
       return () => {
-        puzzlesListener();
+          puzzlesListener();
       };
-    }
-  }, [user]);
+  }
+}, [user]);
 
   useEffect(() => {
     // Fetch the list of images from Firebase Storage
