@@ -11,7 +11,7 @@ import {
 } from "firebase/database";
 import { auth, db, storage } from "./components/Root";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { getDownloadURL, getStorage, list, ref as ref_storage, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, list, ref as ref_storage, uploadBytes } from 'firebase/storage';
 import ImageUploadForm from './components/UploadImageForm';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -132,6 +132,7 @@ function App() {
     }
   };
 
+  // Delete the puzzle from the realtime database
   const handleDelete = async (puzzleKey) => {
     try {
       await remove(ref_database(db, `puzzles/${puzzleKey}`));
